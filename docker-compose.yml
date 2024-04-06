@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  write_only_db:
+    image: mysql:latest
+    container_name: write_only_mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: ${WO_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${WO_MYSQL_DATABASE}
+      MYSQL_USER: ${WO_MYSQL_USER}
+      MYSQL_PASSWORD: ${WO_MYSQL_PASSWORD}
+    ports: 
+      - "3306:3306"
+    volumes:
+      - volume_wo_mysql:/var/lib/mysql
+
+  read_only_db:
+    image: mysql:latest
+    container_name: read_only_mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: ${RO_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${RO_MYSQL_DATABASE}
+      MYSQL_USER: ${RO_MYSQL_USER}
+      MYSQL_PASSWORD: ${RO_MYSQL_PASSWORD}
+    ports: 
+      - "3307:3306"
+    volumes:
+      - volume_ro_mysql:/var/lib/mysql
+
+volumes:
+  volume_wo_mysql:
+    name: WOV
+  volume_ro_mysql:
+    name: ROV
