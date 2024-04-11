@@ -1,0 +1,2 @@
+GRANT ALL PRIVILEGES ON *.* TO 'wo_mysql_user'@'%';
+FLUSH PRIVILEGES;
