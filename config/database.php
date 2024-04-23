@@ -44,13 +44,26 @@ return [
         ],
 
         'mysql' => [
+            'read' => [
+                'host' => [
+                    env('DB_HOST', '127.0.0.1'),
+                ],
+                'port' => env('RO_DB_PORT', '3307'),
+                'username' => env('RO_MYSQL_USER', 'ro_mysql_user'),
+                'password' => env('RO_MYSQL_PASSWORD', ''),
+            ],
+            'write' => [
+                'host' => [
+                    env('DB_HOST', '127.0.0.1'),
+                ],
+                'port' => env('WO_DB_PORT', '3306'),
+                'username' => env('WO_MYSQL_USER', 'wo_mysql_user'),
+                'password' => env('WO_MYSQL_PASSWORD', ''),
+            ],
+            'sticky' => true,
             'driver' => 'mysql',
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
+            // 'url' => env('DATABASE_URL'),
             'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

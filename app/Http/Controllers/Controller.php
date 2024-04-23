@@ -9,4 +9,13 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+    
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function index() : string {
+        return 'Hello from Controller';
+    }
 }
