@@ -28,5 +28,11 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
+        <!-- テストで使うDBのスキーマ名 -->
+        <server name="DB_DATABASE" value="test_my_database"/>
+        <!-- 接続するuserの名前 -->
+        <server name="DB_USERNAME" value="root"/>
+        <!-- 接続するuserのパスワード -->
+        <server name="DB_PASSWORD" value="wo_root"/>
     </php>
 </phpunit>
