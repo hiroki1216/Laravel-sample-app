@@ -46,7 +46,7 @@ return [
         'mysql' => [
             'read' => [
                 'host' => [
-                    env('DB_HOST', '127.0.0.1'),
+                    env('RO_DB_HOST', '127.0.0.1'),
                 ],
                 'port' => env('RO_DB_PORT', '3307'),
                 'username' => env('RO_MYSQL_USER', 'ro_mysql_user'),
@@ -54,7 +54,7 @@ return [
             ],
             'write' => [
                 'host' => [
-                    env('DB_HOST', '127.0.0.1'),
+                    env('WO_DB_HOST', '127.0.0.1'),
                 ],
                 'port' => env('WO_DB_PORT', '3306'),
                 'username' => env('WO_MYSQL_USER', 'wo_mysql_user'),

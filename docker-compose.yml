@@ -1,6 +1,25 @@
 version: '3.9'
 
 services:
+  web:
+    container_name: laravel_app
+    build: 
+      context: ./docker/web
+    ports: 
+      - "80:80"
+    depends_on:
+      - write_only_db
+      - read_only_db
+    volumes:
+      - ./docker/web/etc/nginx/default.d/php.conf:/etc/nginx/default.d/php.conf
+      - ./docker/web/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/web/etc/php-fpm.d/www.conf:/etc/php-fpm.d/www.conf
+      - ./docker/web/etc/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf
+      - ./docker/web/php/php.ini:/etc/php.ini
+      - ./:/srv/
+    env_file:
+      - .env.dev
+
   write_only_db:
     image: mysql:latest
     container_name: master_mysql
@@ -8,12 +27,14 @@ services:
       MYSQL_ROOT_PASSWORD: ${WO_MYSQL_ROOT_PASSWORD}
       MYSQL_USER: ${WO_MYSQL_USER}
       MYSQL_PASSWORD: ${WO_MYSQL_PASSWORD}
+    expose:
+      - 3306
     ports: 
       - "3306:3306"
     volumes:
       - volume_wo_mysql:/var/lib/mysql
-      - ./db-master/etc/mysql/master.conf:/etc/my.cnf
-      - ./db-master/docker/init_master.sql:/docker-entrypoint-initdb.d/initialize.sql
+      - ./docker/db-master/etc/mysql/master.conf:/etc/my.cnf
+      - ./docker/db-master/sql/init_master.sql:/docker-entrypoint-initdb.d/initialize.sql
 
   read_only_db:
     image: mysql:latest
@@ -22,12 +43,15 @@ services:
       MYSQL_ROOT_PASSWORD: ${RO_MYSQL_ROOT_PASSWORD}
       MYSQL_USER: ${RO_MYSQL_USER}
       MYSQL_PASSWORD: ${RO_MYSQL_PASSWORD}
+      MYSQL_TCP_PORT: 3307
+    expose:
+      - 3307
     ports: 
-      - "3307:3306"
+      - "3307:3307"
     volumes:
       - volume_ro_mysql:/var/lib/mysql
-      - ./db-slave/etc/mysql/slave.conf:/etc/my.cnf
-      - ./db-slave/docker/init_slave.sql:/docker-entrypoint-initdb.d/initialize.sql
+      - ./docker/db-slave/etc/mysql/slave.conf:/etc/my.cnf
+      - ./docker/db-slave/sql/init_slave.sql:/docker-entrypoint-initdb.d/initialize.sql
 
 volumes:
   volume_wo_mysql:
