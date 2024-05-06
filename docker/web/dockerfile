@@ -1,0 +1,48 @@
+FROM amazonlinux:2023 as build
+
+# setting locale & timezone
+ENV TZ=Asia/Tokyo 
+# update & upgrade dnf
+RUN dnf update && dnf upgrade
+# install dev-tools
+RUN dnf install -y vi git which tar gzip shadow-utils
+# install php modules
+RUN dnf install -y \
+  php8.1 \
+  php-fpm \
+  php-mbstring \
+  php-mysqlnd \
+  php-pdo \
+  php-xml \
+  php-gd \
+  php-curl \
+  php-pear \
+  php-devel \
+  php-bcmath \
+  php-zip
+# install xdebug3
+RUN pecl install xdebug
+# installs NVM (Node Version Manager)
+RUN touch ~/.bashrc && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && source ~/.bashrc
+# download and install Node.js
+ENV NVM_DIR=/root/.nvm
+RUN . $NVM_DIR/nvm.sh && nvm install 20  
+# install nginx
+RUN dnf -y install nginx
+# install supervisor to manage proceses in this container.
+# see https://docs.docker.jp/engine/admin/using_supervisord.html
+RUN dnf install -y python3-pip \
+    && pip3 install supervisor
+RUN mkdir -p /var/run/php-fpm
+RUN chown -c nginx:nginx /var/run/php-fpm
+# to use composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+COPY ./shell/init.sh /tmp/init.sh
+RUN chmod 777 /tmp/init.sh
+
+EXPOSE 80
+
+WORKDIR /srv/
+
+CMD ["/tmp/init.sh"]
